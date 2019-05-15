@@ -4,8 +4,6 @@ import axios from 'axios';
 import Calendar from 'react-calendar';
 import '../../css/App.css';
 
-
-import moment from "moment";
 class CalendarManager extends Component {
     constructor(props) {
         super(props);

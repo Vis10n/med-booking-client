@@ -14,8 +14,12 @@ class Kappa extends Component {
             domain: 'http://localhost:8080',
             form_object: [],
             data:[],
-            activePage:1,
-            TotalPage:0,
+            sum_form: 0,
+            morning_form: 0,
+            afternoon_form: 0,
+            canceled_form: 0,
+            activePage: 1,
+            TotalPage: 0,
             filterName: '',
             filterPhoneNum: '',
             filterDay: '',
@@ -268,6 +272,7 @@ class Kappa extends Component {
                             Trang chủ
                         </Link>
         }
+
         return(
             <div>
                 {/* sidebar */}
@@ -426,9 +431,52 @@ class Kappa extends Component {
                             
                         </table>
                         <p>   tìm thấy {this.state.TotalPage} kết quả</p> 
-                        <AppointmentList
-                            form_object={form_object}
-                            onDetail={this.onDetail} />
+
+                        <div class="panel panel-container">
+                            <div class="row">
+                                <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                                    <div class="panel panel-teal panel-widget border-right">
+                                        <div class="row no-padding"><em class="fa fa-xl fa-comments color-blue"></em>
+                                            <div class="large">
+                                                {this.state.sum_form}
+                                            </div>
+                                            <div class="text-muted">Tổng số form</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                                    <div class="panel panel-blue panel-widget border-right">
+                                        <div class="row no-padding"><em class="fa fa-xl fa-comments color-orange"></em>
+                                            <div class="large">
+                                                {this.state.morning_form}
+                                            </div>
+                                            <div class="text-muted">Số form buổi sáng</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                                    <div class="panel panel-orange panel-widget border-right">
+                                        <div class="row no-padding"><em class="fa fa-xl fa-comments color-teal"></em>
+                                            <div class="large">
+                                                {this.state.afternoon_form}
+                                            </div>
+                                            <div class="text-muted">Số form buổi chiều</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                                    <div class="panel panel-red panel-widget ">
+                                        <div class="row no-padding"><em class="fa fa-xl fa-comments color-red"></em>
+                                            <div class="large">
+                                                {this.state.canceled_form}
+                                            </div>
+                                            <div class="text-muted">Số form bị hủy</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                    
                    
