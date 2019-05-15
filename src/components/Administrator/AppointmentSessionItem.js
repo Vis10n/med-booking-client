@@ -8,6 +8,7 @@ class AppointmentItem extends Component {
         this.state = {
             token: localStorage.getItem('token'),
             domain: 'http://localhost:8080',
+            id: this.props.day_object.id,
             day: this.props.day_object.day,
             morningCase: this.props.day_object.morningCase,
             afternoonCase: this.props.day_object.afternoonCase,
@@ -25,29 +26,29 @@ class AppointmentItem extends Component {
     }
 
     render() {
-        var {day, morningCase, afternoonCase, morningMaxCase, afternoonMaxCase} = this.state;
-        var {index} = this.props;
+        var {id,day, morningCase, afternoonCase, morningMaxCase, afternoonMaxCase} = this.state;
+     
         // console.log(day_object)
         return(
             // bắt sự kiện Edit khi click vào từng dòng trong bảng
             <tr>    
                 {/* Số thứ tự */}
-                <td>{index + 1}</td>
+                <td style={{width:"8%"}}>{id}</td>
 
                 {/* Tên */}
-                <td>{day}</td>
+                <td style={{width:"25%"}}>{day}</td>
 
                 {/* Số điện thoại */}
-                <td>{morningCase}</td>
+                <td style={{width:"20%"}}>{morningCase}</td>
 
                 {/* Ngày */}
-                <td>{afternoonCase}</td>
+                <td style={{width:"20%"}}>{afternoonCase}</td>
 
                 {/* Status */}
-                <td>{morningMaxCase}</td>
+                <td style={{width:"20%"}}>{morningMaxCase}</td>
 
                 {/* Session */}
-                <td>{afternoonMaxCase}</td>
+                <td style={{width:"20%"}}>{afternoonMaxCase}</td>
                 
                 {/* Các button chức năng */}
                 <td className="text-center">

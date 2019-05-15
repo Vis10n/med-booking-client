@@ -8,16 +8,18 @@ class AppointmentItem extends Component {
         this.state = {
             token: localStorage.getItem('token'),
             domain: 'http://localhost:8080',
-            name: this.props.form_object[1],
-            phoneNumber: this.props.form_object[2],
-            day: this.props.form_object[3],
-            status: this.props.form_object[4],
-            session: this.props.form_object[5],
+            id:this.props.form_object.id,
+            name: this.props.form_object.name,
+            phoneNumber: this.props.form_object.phoneNumber,
+            day: this.props.form_object.day,
+            status: this.props.form_object.status,
+            session: this.props.form_object.session,
         }
     }
 
     onDetail = () => {
-        localStorage.setItem("appointmentId", JSON.stringify(this.props.form_object.id));
+        localStorage.setItem("appointmentId",this.state.id);
+        
     }
 
     render() {
@@ -27,23 +29,24 @@ class AppointmentItem extends Component {
             // bắt sự kiện Edit khi click vào từng dòng trong bảng
             <tr>    
                 {/* Số thứ tự */}
-                <td>{index + 1}</td>
+                <td style={{width:"5%"}}>{form_object.id}</td>
 
                 {/* Tên */}
-                <td>{form_object[1]}</td>
+                <td style={{width:"21%"}}>{form_object.name}</td>
 
                 {/* Số điện thoại */}
-                <td>{form_object[2]}</td>
+                <td style={{width:"20%"}}>{form_object.phoneNumber}</td>
 
                 {/* Ngày */}
-                <td>{form_object[3]}</td>
+                <td style={{width:"20%"}}>{form_object.day}</td>
 
                 {/* Status */}
-                <td>{form_object[4]}</td>
+                <td style={{width:"13%"}}>{form_object.session}</td>
 
                 {/* Session */}
-                <td>{form_object[5]}</td>
+                <td style={{width:"13%"}}>{form_object.status}</td>
                 
+                <td style={{width:"13%"}}>{form_object.type}</td>
                 {/* Các button chức năng */}
                 <td className="text-center">
                     <Link to='/AppointmentDetail'>

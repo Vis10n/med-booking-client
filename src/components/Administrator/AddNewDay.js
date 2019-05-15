@@ -4,25 +4,20 @@ import axios from 'axios';
 
 import '../../css/App.css';
 
-class AppointmentSessionDetail extends Component {
+class AddNewDay extends Component {
     // Hàm khởi tạo
     constructor(props) {
         super(props);
         this.state = {
             token: localStorage.getItem('token'),
             domain: 'http://localhost:8080',
-            day: localStorage.getItem('dayOjDay'),
-            morningCase: localStorage.getItem('dayOjmorningCase'),
-            afternoonCase: localStorage.getItem('dayOjafternoonCase'),
-            morningMaxCase: localStorage.getItem('dayOjmorningMaxCase'),
-            afternoonMaxCase: localStorage.getItem('dayOjafternoonMaxCase'),           
+            day: "",
+            morningCase: "",
+            afternoonCase: "",
+            morningMaxCase: "",
+            afternoonMaxCase: "",           
         }
-        // xóa data trong localStorage
-        localStorage.removeItem('dayOjDay');
-        localStorage.removeItem('dayOjmorningCase');
-        localStorage.removeItem('dayOjmorningMaxCase');
-        localStorage.removeItem('dayOjafternoonCase');
-        localStorage.removeItem('dayOjafternoonMaxCase');     
+ 
     }
     
     
@@ -68,8 +63,10 @@ class AppointmentSessionDetail extends Component {
             .then(response => {
                 if (response.data.status === "good") {
                     alert("Sửa thành công!");
-                } else {
-                    alert("Lỗi!");
+                } else if(response.data.status==="not allowed to change"){
+                    alert("Ngày đã có lịch hẹn không được thay đổi");
+                } else{
+                    alert("Lỗi!")
                 }
                 //console.log(response);
             })
@@ -177,12 +174,12 @@ class AppointmentSessionDetail extends Component {
                             <li className="active">Dashboard</li>
                             <li className="active">Admin</li>
                             <li className="active">Quản lý phiên</li>
-                            <li className="active">Chi tiết phiên làm việc</li>
+                            <li className="active">Lên lịch cho ngày mới </li>
                         </ol>
                     </div>
                     <div>
                         <h1>
-                            Chi tiết phiên làm việc              
+                            Lên lịch cho ngày mới              
                         </h1>
                     </div>
                     <br/>
@@ -191,7 +188,6 @@ class AppointmentSessionDetail extends Component {
                         <div className="panel-heading">
                             <h2 className="panel-title">
                                 <b>
-                                    Sửa thông tin phiên làm việc
                                 </b> 
                                 &nbsp;
                             </h2>
@@ -206,7 +202,7 @@ class AppointmentSessionDetail extends Component {
                                         name="day"
                                         className="form-control"
                                         placeholder="Ngày"
-                                        disabled={true}
+                                        disabled={false}
                                         value={day}
                                         onChange={this.onChange} />
                                 </div>
@@ -218,7 +214,7 @@ class AppointmentSessionDetail extends Component {
                                             name="morningCase"
                                             className="form-control"
                                             placeholder="Số ca sáng"
-                                            disabled={true}
+                                            disabled={false}
                                             value={morningCase}
                                             onChange={this.onChange} />
                                     </div>
@@ -231,7 +227,7 @@ class AppointmentSessionDetail extends Component {
                                             className="form-control"
                                             placeholder="Số ca chiều"
                                             value={afternoonCase}
-                                            disabled={true}
+                                            disabled={false}
                                             onChange={this.onChange} />
                                     </div>
                                 </div>
@@ -273,12 +269,14 @@ class AppointmentSessionDetail extends Component {
                                     Hoàn tất
                                 </button>
                                 &nbsp;
-                                    {/* <button 
+                                <Link to="/HomeAppointmentSession">
+                                    <button 
                                     type="button" 
                                     className="btn btn-warning mb-5"
                                     onClick={this.onClearForm}>
-                                    Đặt lại
-                                    </button>                        */}
+                                    Quay lại
+                                    </button>                      
+                                </Link> 
                                 &nbsp;
                                 <button
                                     type="button"
@@ -296,4 +294,4 @@ class AppointmentSessionDetail extends Component {
     }
     
 }
-export default AppointmentSessionDetail;
+export default AddNewDay;

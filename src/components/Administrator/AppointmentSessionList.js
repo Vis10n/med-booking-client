@@ -45,61 +45,7 @@ class AppointmentSessionList extends Component {
 
         return(
             <table className="table table-hover mt-15">
-                <thead>
-                    <tr>
-                        <th className="text-center">STT</th>
-                        <th className="text-center">Ngày</th>
-                        <th className="text-center">Số ca sáng</th>
-                        <th className="text-center">Số ca chiều</th>
-                        <th className="text-center">Giới hạn ca sáng</th>
-                        <th className="text-center">Giới hạn ca chiều</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <input 
-                                type="text" 
-                                className="form-control"
-                                name="filterName" 
-                                // value={filterName}
-                                onChange={this.onChange}/>
-                        </td>
-                        <td>
-                        <input 
-                                type="text" 
-                                className="form-control"
-                                name="filterPhoneNum" 
-                                // value={filterPhoneNum}
-                                onChange={this.onChange}/>
-                        </td>
-                        <td>
-                        <input 
-                                type="text" 
-                                className="form-control"
-                                name="filterDay" 
-                                // value={filterDay}
-                                onChange={this.onChange}/>
-                        </td>
-                        <td>
-                        <input 
-                                type="text" 
-                                className="form-control"
-                                name="filterSession" 
-                                // value={filterSession}
-                                onChange={this.onChange}/>
-                        </td>
-                        <td>
-                        <input 
-                                type="text" 
-                                className="form-control"
-                                name="filterStatus" 
-                                // value={filterStatus}
-                                onChange={this.onChange}/>
-                        </td>
-                        <td></td>
-                    </tr>
+               <tbody>
                     {elmAppointment}
                 </tbody>
             </table>

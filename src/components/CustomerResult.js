@@ -1,16 +1,22 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import axios from "axios";
-
+import AppointmentList from './Administrator/AppointmentList';
 import '../css/App.css';
-
-class CancelBooking extends Component {
+import Pagination from "react-js-pagination";
+class CustomerResult extends Component {
     constructor(props) {
         super(props);
         this.state = {
             domain: 'http://localhost:8080',
             status: '',
             code: '',
+            form_object: [],
+            data:[],
+            activePage:1,
+            TotalPage:0,
+            filterName: '',
+            filterPhoneNum: '',
         }
     }
 
@@ -19,43 +25,96 @@ class CancelBooking extends Component {
         var target = event.target;
         var name = target.name;
         var value = target.value;
-
-        // if (name === 'type') {
-        //     value = target.value === "true" ? true : false;
-        // }
-
         this.setState({
             [name]: value
         })
     }
-
+    
     onSubmit = (event) => {
         //chặn submit lên url
         event.preventDefault();
+        var field = []
+        var value = []
+        field.push("name")
+        value.push(this.state.filterName)
+        field.push("phoneNumber")
+        value.push(this.state.filterPhoneNum)
+        this.setState({
+            activePage:1
+        })
+        var body_data={
+            field:field,
+            value:value,
+            pageNumber:this.state.activePage,
+            numberForm:'15'
+        }
         axios
             .post(
-                this.state.domain + "/cancel_appointment",
+                this.state.domain + "/customer_result",
+                body_data,
                 {
-                    status: this.state.status,
-                    code: this.state.code,
-                },
-                {
-                    headers: { "content-type": "application/json" }
+                    headers: {"content-type": "application/json" }
                 }
             )
             .then(response => {
-                if (response.data.status === "good") {
-                    alert("Hủy thành công buổi hẹn");
-                } else {
-                    alert("Lỗi! Mã xác thực không đúng");
-                }
-                //console.log(response);
+                this.setState({
+                    form_object: response.data.list,
+                    TotalPage: response.data.numberPage
+                    
+                })
+                // console.log(response.data);
+                this.data = response.data.list;
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
 
+    handlePageChange=(pageNumber)=>{
+        // alert( pageNumber);
+        // kiểm tra xem có đang lọc thông tin hay không
+        var field = []
+        var value = []
+        if(this.state.filterName!==""){
+            field.push('name')
+            value.push(this.state.filterName)
+        }
+        if(this.state.filterPhoneNum!==""){
+            field.push('phoneNumber')
+            value.push(this.state.filterPhoneNum)
+        }
+        //nếu đang lọc
+        if(field.length>0){
+            var body_data={
+                field:field,
+                value:value,
+                pageNumber:pageNumber,
+                numberForm:'15'
+            }
+            axios
+            .post(
+                this.state.domain + "/customer_result",
+                body_data,
+                {
+                    headers: { 
+                        "Authorization": this.state.token,
+                        "content-type": "application/json", }
+                }
+            )
+            .then(response => {
+                this.setState({
+                    form_object: response.data.list,
+                    TotalPage: response.data.numberPage,
+                    activePage:pageNumber
+                })
+                // console.log(response.data);
+                this.data = response.data.list;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
+    }
     // xóa token và đăng xuất
     signOut = () => {
         // console.log(localStorage.getItem("token"));
@@ -63,7 +122,7 @@ class CancelBooking extends Component {
     }
     
     render() {
-
+        var {form_object} = this.state;
         //Điều hướng trang chủ private/public
         var dashboard;
         if (localStorage.getItem('token') !== null) {
@@ -111,19 +170,6 @@ class CancelBooking extends Component {
                                 </em>
                                 Đăng nhập (Admin only)
                             </Link>
-        }
-        var customerResult;
-        if(localStorage.getItem('token') === null){
-            customerResult = 
-                            <Link to="/CustomerResult">
-                                <em className="fa fa-dashboard">
-                                    &nbsp;
-                                </em>
-                                Tra cứu kết quả khám
-                            </Link>
-                           
-        } else {
-            customerResult = null;
         }
         var addAccount; 
         if (localStorage.getItem('token') !== null) {
@@ -179,7 +225,7 @@ class CancelBooking extends Component {
                                 Đăng ký cũ
                             </Link>
                         </li>
-                        <li className="active">
+                        <li >
                             <Link to="/CancelBooking">
                                 <em className="fa fa-dashboard">
                                     &nbsp;
@@ -187,8 +233,13 @@ class CancelBooking extends Component {
                                 Hủy lịch khám
                             </Link>
                         </li>
-                        <li>
-                            {customerResult}
+                        <li className="active">
+                            <Link to="/CustomerResult">
+                                <em className="fa fa-dashboard">
+                                    &nbsp;
+                                </em>
+                                Tra cứu kết quả khám
+                            </Link>
                         </li>
                         <li>
                             {homeAppointmentSession}
@@ -216,47 +267,86 @@ class CancelBooking extends Component {
                     </div>
                     <div>
                         <h1>
-                            Huỷ lịch khám
+                            Tra cứu kết quả khám
                         </h1>
                         <div className="panel panel-info col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            <div className="panel-heading">
-                                <h3 className="panel-title">
-                                    Huỷ lịch khám bệnh
-                                    &nbsp;
-                                </h3>
-                            </div>
+                            
                             <div className="panel-body">
                                 <form onSubmit={this.onSubmit}>                                   
                                         {/* Họ Tên (input) */}
-                                        <div className="form-group">
-                                            <label>Mã xác thực</label>
+                                        <div className="form-group col-md-6">
+                                            <label>Họ và tên</label>
                                             <input
                                                 type="text"
-                                                name="code"
+                                                name="filterName"
                                                 className="form-control"
                                                 id=""
-                                                placeholder="mã xác thực của buổi hẹn"
-                                                value={this.state.code}
+                                                placeholder=""
+                                                value={this.state.filterName}
                                                 onChange={this.onChange} />
+                                            
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                            <label>Số điện thoại</label>
+                                            <input
+                                                type="text"
+                                                name="filterPhoneNum"
+                                                className="form-control"
+                                                id=""
+                                                placeholder=""
+                                                value={this.state.filterPhoneNum}
+                                                onChange={this.onChange} />
+                                            
                                         </div>
                                         {/* Button hoàn tất  */}
+                                      
                                         <button
                                             type="submit"
                                             className="btn btn-primary"
-                                            disabled={!this.state.code}
+                                            disabled={!this.state.filterPhoneNum
+                                                        ||!this.state.filterName
+                                            }
                                         >
                                             <span className="fa fa-check mr-5"></span>
                                             Xác nhận
                                         </button>
+                                          
                                 </form>
                             </div>
+                            
                         </div>
+                        <div>
+                            <table className="table table-hover mt-15">
+                                <thead>
+                                    <tr>
+                                        <th className="text-center">STT</th>
+                                        <th className="text-center">Họ Tên</th>
+                                        <th className="text-center">Số đt</th>
+                                        <th className="text-center">Ngày</th>
+                                        <th className="text-center">Sesstion</th>
+                                        <th className="text-center">Status</th>
+                                    </tr>
+                                </thead>
+                            </table>  
+                        </div>
+                        <p>   tìm thấy {this.state.TotalPage} kết quả</p> 
+                        <AppointmentList
+                            form_object={form_object}
+                            onDetail={this.onDetail} />
                     </div>
-
+                    <div>
+                        <Pagination
+                        activePage={this.state.activePage}
+                        itemsCountPerPage={15}
+                        totalItemsCount={this.state.TotalPage}
+                        pageRangeDisplayed={5}
+                        onChange={this.handlePageChange}
+                        />
+                    </div>
                     {/* /.main */}
                 </div>
             </div>
         );
     }
 }
-export default CancelBooking;
+export default CustomerResult;

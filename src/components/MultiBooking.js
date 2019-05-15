@@ -4,7 +4,7 @@ import axios from "axios";
 
 import '../css/App.css';
 
-class NewBooking extends Component {
+class MultiBooking extends Component {
     
     //Hàm khởi tạo
     constructor(props) {
@@ -15,23 +15,13 @@ class NewBooking extends Component {
             name: '',
             phoneNumber: '',
             day: '',
-            session:'morning',
+            session:'',
             status: 'waiting',
-            result: '',
-            code: '',
-            stay: false,
-            begin: '',
-            end: '',
-            dayId: '',
-            gender:'',
-            home:'',
-            problem:'',
-            address:'',
-            // stayCheck: false,
-            isdisabled : false,
+            number:'',
+            morningFreeCase:0,
+            afternoonFreeCase:0,
             day_object: [],
-            freeMorning:0,
-            freeAfternoon:0
+            isdisable:false
         }
     }
 
@@ -71,8 +61,9 @@ class NewBooking extends Component {
         this.setState({
             [name]: value
         })
+
         if(name ==='day'){
-            // console.log(value)
+            console.log(value)
             axios
             .post(
                 this.state.domain + "/get_day_detail",
@@ -88,17 +79,13 @@ class NewBooking extends Component {
                 morningfree =  response.data.morningMaxCase  - response.data.morningCase
                 afternoonFree = response.data.afternoonMaxCase - response.data.afternoonCase
                 this.setState({
-                    freeMorning:morningfree,
-                    freeAfternoon:afternoonFree
+                    morningFreeCase:morningfree,
+                    afternoonFreeCase:afternoonFree
                 })
             })
             .catch(function (error) {
                 console.log(error);
             });
-        this.stayCheck(); 
-        localStorage.setItem('stay',this.state.stay)
-        console.log(this.state.stay)
-        console.log(this.state.stayCheck)
         }
     }
 
@@ -110,45 +97,16 @@ class NewBooking extends Component {
             day: '',
             session:'morning',
             status: 'waiting',
-            result: '',
-            code: '',
-            stay: false,
-            begin: '',
-            end: '',
-            dayId: '',
-            gender:'',
-            address:'',
-            problem:'',
-            home:'',
+            number:'',
             // stayCheck: false,
-            isdisabled:false,
             day_object: [],
         })
     }
 
-    stayCheck = () => {
-        if (this.state.stay === true) {
-            this.setState({
-                stayCheck: true,
-            })          
-        }
-        else if (this.state.stay === false 
-            && this.state.begin !== '' 
-            && this.state.end !== '') {
-                this.setState({
-                    stayCheck: true,
-                })
-            }
-        else {
-            this.setState({
-                stayCheck: false,
-            })
-        }
-    }
 
     onSubmit = (event) => {
-         //chặn submit lên url
-         this.setState({
+        //chặn submit lên url
+        this.setState({
             isdisabled:true
         })
         event.preventDefault();
@@ -158,66 +116,52 @@ class NewBooking extends Component {
                 isdisabled:false
             })
         }else{
-       
-        
-        
-        // alert(this.state.day)
-        var form_object=  {
-            id: '',
-            name: this.state.name,
-            phoneNumber: this.state.phoneNumber,
-            day: this.state.day,
-            session:this.state.session,
-            status: this.state.status,
-            result: this.state.result,
-            code: this.state.code,
-            stay: this.state.stay,
-            begin: this.state.begin,
-            end: this.state.end,
-            dayId: this.state.dayId,
-            gender:this.state.gender,
-            home:this.state.home,
-            problem:this.state.problem,
-            address:this.state.address
+           
+            var wrapper=  {
+                id: '',
+                name: this.state.name,
+                phoneNumber: this.state.phoneNumber,
+                day: this.state.day,
+                number:this.state.number,
+                session:this.state.session
+            }
+            axios
+                .post(
+                    this.state.domain + "/multi_booking",
+                    wrapper,
+                    {
+                        headers: { "content-type": "application/json", }
+                    }
+                )
+                .then(response => {
+                    if (response.data.status === "good") {
+                        alert("đặt thành công buổi hẹn! Mã xác thực là " + response.data.code);
+                        this.onClearForm();
+                        this.setState({
+                            isdisabled:false
+                        })
+                    } else if(response.data.status === "overload"){
+                        alert("Phiên không đủ ca để đăng ký, xin chọn lại ngày khác, xin cảm ơn !")
+                        this.setState({
+                            isdisabled:false
+                        })
+                    }else if(response.data.status === "old day"){
+                        alert("Ngày không khả dụng")
+                        this.setState({
+                            isdisabled:false
+                        })
+                    }
+                    else {
+                        alert("Lỗi!");
+                        this.setState({
+                            isdisabled:false
+                        })
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
-        axios
-            .post(
-                this.state.domain + "/send_appointment",
-                form_object,
-                {
-                    headers: { "content-type": "application/json", }
-                }
-            )
-            .then(response => {
-                if (response.data.status === "good") {
-                    alert("đặt thành công buổi hẹn! Mã xác thực là " + response.data.code);
-                    this.onClearForm();
-                    this.setState({
-                        isdisabled:false
-                    })
-                } else if(response.data.status === "wrong day") {
-                    alert("Ngày không hợp lệ, xin chọn ngày khác");
-                    this.setState({
-                        isdisabled:false
-                    })
-                } else if(response.data.status === "session is not available") {
-                    alert("Ngày không hợp lệ, xin chọn ngày khác");
-                    this.setState({
-                        isdisabled:false
-                    })
-                }
-                else {
-                    alert("Lỗi!");
-                    this.setState({
-                        isdisabled:false
-                    })
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        }
-        
     }
 
 
@@ -298,7 +242,7 @@ class NewBooking extends Component {
                                 Đăng nhập (Admin only)
                             </Link>
         }
-        
+         
         var addAccount; 
         if (localStorage.getItem('token') !== null) {
             addAccount = 
@@ -321,7 +265,7 @@ class NewBooking extends Component {
                         <li>
                             {dashboard}
                         </li>
-                        <li className="active">
+                        <li >
                             <Link to="/NewBooking">
                                 <em className="fa fa-dashboard">
                                     &nbsp;
@@ -329,7 +273,7 @@ class NewBooking extends Component {
                                 Đặt lịch khám
                             </Link>
                         </li>
-                        <li>
+                        <li className="active">
                             <Link to="/MultiBooking" >
                                 <em className="fa fa-dashboard">
                                     &nbsp;
@@ -361,7 +305,6 @@ class NewBooking extends Component {
                                 Hủy lịch khám
                             </Link>
                         </li>
-            
                         <li>
                             {customerResult}
                         </li>
@@ -391,12 +334,12 @@ class NewBooking extends Component {
                     </div>
                     <div>
                         <h1>
-                            Đăng ký lịch khám bệnh
+                            Đăng ký tập thể
                         </h1>
                         <div className="panel panel-info col-xs-13 col-sm-13 col-md-13 col-lg-13">
                             <div className="panel-heading">
                                 <h3 className="panel-title">
-                                    Đặt lịch khám bệnh
+                                    Đặt lịch khám bệnh tập thể
                                     &nbsp;
                                 </h3>
                             </div>
@@ -416,6 +359,16 @@ class NewBooking extends Component {
                                                 onChange={this.onChange} />
                                         </div>
                                         <div className="form-group">
+                                            <label>Ngày <font color="red">*</font> </label>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                name="day"
+                                                value={this.state.day}
+                                                onChange={this.onChange}/>
+                                               
+                                        </div>
+                                        <div className="form-group">
                                             <label>Địa chỉ <font color="red">*</font> </label>
                                             <input
                                                 type="text"
@@ -426,40 +379,18 @@ class NewBooking extends Component {
                                                 value={this.state.address}
                                                 onChange={this.onChange} />
                                         </div>
-                                        {/* Thời gian (input) */}
                                         <div className="form-group">
-                                            <label>Ngày <font color="red">*</font></label>
+                                            <label>Số lượng <font color="red">*</font> </label>
                                             <input
-                                                type="date"
+                                                type="text"
+                                                name="number"
                                                 className="form-control"
-                                                name="day"
-                                                value={this.state.day}
+                                                id=""
+                                                placeholder=""
+                                                value={this.state.number}
                                                 onChange={this.onChange} />
-                                                
-                                            
                                         </div>
-                                        <div className="form-group">
-                                            <label>Số ca trống buổi sáng: </label>
-                                            <input
-                                                disabled={true}
-                                                className="form-control"
-                                                
-                                                value={this.state.freeMorning}
-                                                />
-                                                
-                                            
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Số ca trống buổi chiều: </label>
-                                            <input
-                                                disabled={true}
-                                                className="form-control"
-                                                
-                                                value={this.state.freeAfternoon}
-                                                 />
-                                                
-                                            
-                                        </div>
+                                        {/* Thời gian (input) */}
                                         
                                     </div>
                                     <div className="col-md-6">
@@ -475,19 +406,28 @@ class NewBooking extends Component {
                                                 value={this.state.phoneNumber}
                                                 onChange={this.onChange} />
                                         </div>
-                                        <div className="form-group">
-                                            <label>Giới tính <font color="red">*</font></label>
-                                            <select
-                                                className="form-control"
-                                                name="gender"
-                                                value={this.state.gender}
-                                                onChange={this.onChange}>
-                                                <option value="Nam">Nam</option>
-                                                <option value="Nữ">Nữ</option>
-                                            </select>
-                                        </div>
 
                                         {/* Session (select) */}
+                                        <div className="form-group">
+                                            <label>Số buổi sáng còn trống : </label>
+                                            <input
+                                                type="text"
+                                                name="morningFreeCase"
+                                                className="form-control"
+                                                disabled={true}
+                                                value={this.state.morningFreeCase}
+                                                />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Số buổi chiều còn trống : </label>
+                                            <input
+                                                type="text"
+                                                name="afternoonFreeCase"
+                                                className="form-control"
+                                                disabled={true}
+                                                value={this.state.afternoonFreeCase}
+                                                />
+                                        </div>
                                         <div className="form-group">
                                             <label>Phiên <font color="red">*</font></label>
                                             <select
@@ -500,19 +440,9 @@ class NewBooking extends Component {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="col-md-12">
-                                        <div className="form-group">
-                                            <label>Triệu chứng</label>
-                                                <textarea
-                                                    type="text"
-                                                    name="problem"
-                                                    className="form-control"
-                                                    id=""
-                                                    placeholder="mô tả triệu chứng của bạn"
-                                                    value={this.state.problem}
-                                                    onChange={this.onChange} />
-                                        </div>
-                                    </div>
+                                    
+                                    
+
                                     <div className="col-md-12">
                                     <button
                                             type="submit"
@@ -520,15 +450,21 @@ class NewBooking extends Component {
                                             disabled={!this.state.name
                                                 || !this.state.phoneNumber
                                                 || !this.state.day
+                                                || !this.state.address
                                                 // || !this.state.session
-                                                || this.state.isdisabled
+                                                || this.state.isdisable
                                                 }
                                             >
                                             <span className="fa fa-check mr-5"></span>
                                             Xác nhận
                                         </button>
                                         &nbsp;
-                                       
+                                        {/* <button 
+                                            type="button" 
+                                            className="btn btn-warning"
+                                            onClick={this.onClearForm}>
+                                            Đặt lại
+                                        </button> */}
                                     </div>                        
                                         
                                 </form>
@@ -543,4 +479,4 @@ class NewBooking extends Component {
         );
     }
 }
-export default NewBooking;
+export default MultiBooking;

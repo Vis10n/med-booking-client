@@ -6,7 +6,7 @@ import Pagination from "react-js-pagination";
 import AppointmentList from './AppointmentList';
 // import { access } from 'fs';
 
-class HomeAdmin extends Component {
+class Kappa extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -358,7 +358,7 @@ class HomeAdmin extends Component {
                     </div>
                     <div className="text-center">
                         <h1>
-                            Welcome Admin                
+                            Thống kê             
                         </h1>
                     </div>
                     <br/>
@@ -367,18 +367,20 @@ class HomeAdmin extends Component {
                         <table className="table table-hover mt-15">
                             <thead>
                                 <tr>
-                                    <th className="text-center">STT</th>
-                                    <th className="text-center">Họ Tên</th>
-                                    <th className="text-center">Số điện thoại</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                     <th className="text-center">Ngày</th>
-                                    <th className="text-center">Phiên</th>
-                                    <th className="text-center">Trạng thái</th>
-                                    <th className="text-center">Loại đăng ký</th>
+                                    <th className="text-center">Tháng</th>
+                                    <th className="text-center">Năm</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td></td>
+                                   <td></td>
+                                   <td></td>
+                                   <td></td>
                                     <td style={{width:"18%"}}>
                                         <input 
                                             type="text" 
@@ -406,33 +408,9 @@ class HomeAdmin extends Component {
                                             onChange={this.onChange}
                                             />
                                     </td>
-                                    <td style={{width:"12%"}}>
-                                    <input 
-                                            type="text" 
-                                            className="form-control"
-                                            name="filterSession" 
-                                            value={this.state.filterSession}
-                                            onChange={this.onChange}
-                                            />
-                                    </td>
-                                    <td style={{width:"12%"}}>
-                                    <input 
-                                            type="text" 
-                                            className="form-control"
-                                            name="filterStatus" 
-                                            value={this.state.filterStatus}
-                                            onChange={this.onChange}
-                                            />
-                                    </td>
-                                    <td style={{width:"12%"}}>
-                                    <input 
-                                            type="text" 
-                                            className="form-control"
-                                            name="filterType" 
-                                            value={this.state.filterType}
-                                            onChange={this.onChange}
-                                            />
-                                    </td>
+                                    
+                                    
+                                    
                                     <td>
                                         <button
                                             className="btn btn-primary"
@@ -452,16 +430,8 @@ class HomeAdmin extends Component {
                             form_object={form_object}
                             onDetail={this.onDetail} />
                     </div>
-                    {/* phân trang */}
-                    <div>
-                        <Pagination
-                        activePage={this.state.activePage}
-                        itemsCountPerPage={15}
-                        totalItemsCount={this.state.TotalPage}
-                        pageRangeDisplayed={5}
-                        onChange={this.handlePageChange}
-                        />
-                    </div>
+                   
+                   
                     {/* /.main */}
                     {/* return */}
                     
@@ -471,4 +441,4 @@ class HomeAdmin extends Component {
         ); 
     }
 }
-export default HomeAdmin;
+export default Kappa;

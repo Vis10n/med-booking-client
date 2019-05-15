@@ -6,12 +6,19 @@ import '../css/App.css';
 import Home from './Home';
 import Login from './Login';
 import HomeAdmin from './Administrator/HomeAdmin';
+import AppointmentDetail from './Administrator/AppointmentDetail';
 import NewBooking from './NewBooking';
+import StayBooking from './StayBooking';
 import CancelBooking from './CancelBooking';
 import HomeAppointmentSession from './Administrator/HomeAppointmentSession';
 import AppointmentSessionDetail from './Administrator/AppointmentSessionDetail';
 import AddAccount from './Administrator/AddAccount';
-
+import AddNewDay from './Administrator/AddNewDay';
+import CalendarManager from './Administrator/CalendarManager';
+import CustomerResult from './CustomerResult';
+import MultiBooking from './MultiBooking';
+import OldCustomer from './OldCustomer';
+import Kappa from './Administrator/Kappa';
 const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={(props) => (
         localStorage.getItem('token') !== null
@@ -77,7 +84,13 @@ class App extends Component {
                             {/* Public */}
                             <Route 
                                 exact path='/' 
-                                component={Home} />                   
+                                component={Home} />   
+                            <Route 
+                                exact path='/MultiBooking' 
+                                component={MultiBooking} /> 
+                            <Route 
+                                exact path='/OldCustomer' 
+                                component={OldCustomer} />                   
                             <Route 
                                 path='/Login' 
                                 component={Login} />
@@ -85,14 +98,20 @@ class App extends Component {
                                 path='/NewBooking' 
                                 component={NewBooking} />
                             <Route 
+                                path='/StayBooking' 
+                                component={StayBooking} />
+                            <Route 
+                                path='/CustomerResult' 
+                                component={CustomerResult} />
+                            <Route 
                                 path='/CancelBooking' 
                                 render={props => <CancelBooking {...props} token={this.state.token} />} />
                             {/* For Administrator only*/}
+                            <Route 
+                                path='/AppointmentDetail' 
+                                component={AppointmentDetail} />
                             <PrivateRoute 
                                 path='/HomeAdmin' 
-                                component={HomeAdmin} />
-                            <PrivateRoute 
-                                path='/AppointmentDetail' 
                                 component={HomeAdmin} />
                             <PrivateRoute 
                                 path='/HomeAppointmentSession' 
@@ -103,11 +122,25 @@ class App extends Component {
                             <PrivateRoute 
                                 path='/AddAccount' 
                                 component={AddAccount} />   
+                            <PrivateRoute 
+                                path='/AddNewDay' 
+                                component={AddNewDay} />   
+                            <PrivateRoute 
+                                path='/CalendarManager' 
+                                component={CalendarManager} />
+                            <Route 
+                                path='/Kappa' 
+                                component={Kappa} />
+
                         </Switch>
                     </BrowserRouter>
                     {/* /.main */}
                 </div>
-                
+                <div className="footer">
+                    <footer >
+
+                    </footer>
+                </div>
             </div>
         );
     }

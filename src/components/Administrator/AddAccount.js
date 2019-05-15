@@ -94,7 +94,7 @@ class CancelBooking extends Component {
         var homeAppointmentSession;
         if (localStorage.getItem('token') !== null) {
             homeAppointmentSession = 
-                        <Link to="/HomeAppointmentSession">
+                        <Link to="/CalendarManager">
                             <em className="fa fa-dashboard">
                                 &nbsp;
                             </em>
@@ -138,6 +138,30 @@ class CancelBooking extends Component {
                                     &nbsp;
                                 </em>
                                 Đặt lịch khám
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/MultiBooking" >
+                                <em className="fa fa-dashboard">
+                                    &nbsp;
+                                </em>
+                                Đăng ký tập thể
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/StayBooking">
+                                <em className="fa fa-dashboard">
+                                    &nbsp;
+                                </em>
+                                Đăng ký nội trú
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/OldCustomer">
+                                <em className="fa fa-dashboard">
+                                    &nbsp;
+                                </em>
+                                Đăng ký cũ
                             </Link>
                         </li>
                         <li >
